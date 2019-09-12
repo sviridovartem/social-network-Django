@@ -15,10 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from sn_profile.views import frontpage, signout
+from sn_profile.views import frontpage, signout,profile
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', frontpage, name='frontpage'),
     path('signout/', signout, name='signout'),
+    path('<str:username>/', profile, name='profile'),
 ]

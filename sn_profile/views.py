@@ -1,17 +1,36 @@
-from django.shortcuts import render
-
-# Create your views here.
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from sn_profile.forms import SignupForm, SigninForm
+from post.forms import PostForm
 
 
-# Views
+def profile(request, username):
+    if request.user.is_authenticated:
+        user = User.objects.get(username=username)
+
+        if request.method == 'POST':
+            form = PostForm(data=request.POST)
+
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.user = request.user
+                post.save()
+
+                redirecturl = request.POST.get('redirect', '/')
+
+                return redirect(redirecturl)
+        else:
+            form = PostForm()
+
+        return render(request, 'profile.html', {'form': form, 'user': user})
+    else:
+        return redirect('/')
+
 
 def frontpage(request):
     if request.user.is_authenticated:
-        return render(request, 'profile.html')
+        return redirect('/' + request.user.username + '/')
     else:
         if request.method == 'POST':
             if 'signupform' in request.POST:
