@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from sn_profile.forms import SignupForm, SigninForm
+from django.contrib.auth.decorators import login_required
 from post.forms import PostForm
 
 
@@ -61,3 +62,40 @@ def frontpage(request):
 def signout(request):
     logout(request)
     return redirect('/')
+
+
+@login_required
+def follow(request, username):
+    user = User.objects.get(username=username)
+    request.user.sn_profile.follows.add(user.sn_profile)
+
+    return redirect('/' + user.username + '/')
+
+
+@login_required
+def stopfollow(request, username):
+    user = User.objects.get(username=username)
+    request.user.sn_profile.follows.remove(user.sn_profile)
+
+    return redirect('/' + user.username + '/')
+
+
+def follows(request, username):
+    user = User.objects.get(username=username)
+    sn_profiles = request.user.sn_profile.follows.select_related('user').all()
+
+    return render(request, 'users.html', {'title': 'Follows', 'sn_profiles': sn_profiles})
+
+
+def followers(request, username):
+    user = User.objects.get(username=username)
+    sn_profiles = request.user.sn_profile.followed_by.select_related('user').all()
+    return render(request, 'users.html', {'title': 'Followers', 'sn_profiles': sn_profiles})
+
+
+def friends(request, username):
+    user = User.objects.get(username=username)
+    sn_profiles1 = request.user.sn_profile.follows.select_related('user').all()
+    sn_profiles2 = request.user.sn_profile.followed_by.select_related('user').all()
+    sn_profiles = list(set(sn_profiles1) & set(sn_profiles2))
+    return render(request, 'users.html', {'title': 'Friends', 'sn_profiles': sn_profiles})

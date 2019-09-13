@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <div>
+        <h1>{{ title }}</h1>
+        <ul>
+            {% for profile in sn_profiles %}
+                <li>
+                    <a href="/{{ profile.user.username }}/">{{ profile.user.username }}</a>
+                    <a href="/{{ user.username }}/stopfollow/" class="btn btn-danger" style="margin-left: 40px">Stop follow</a>
+                </li>
+                <hr>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
+
+

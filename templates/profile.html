@@ -5,13 +5,29 @@
     <div class="row">
         <!-- Feed -->
         <div class="col-9">
-            <h3>@{{ user.username }}</h3>
+            <h3>{{ user.username }}</h3>
+            <hr>
+            <b><a href="/{{ user.username }}/follows/">Follows:</a></b> {{ user.sn_profile.follows.count }} -
+            <b><a href="/{{ user.username }}/followers/">Followers:</a></b> {{ user.sn_profile.followed_by.count }}
+            <hr>
+            <b><a href="/{{ user.username }}/friends/">Friends</a></b> {{ user.sn_profile.friends.count }}
+
+            {% ifnotequal request.user user %}
+                <hr>
+                {% if request.user.sn_profile in user.sn_profile.followed_by.all %}
+                    <a href="/{{ user.username }}/stopfollow/" class="btn btn-danger">Stop follow</a>
+                {% else %}
+                    <a href="/{{ user.username }}/follow/" class="btn btn-success">Follow</a>
+                {% endif %}
+            {% endifnotequal %}
+            <hr>
+
 
             {% if user.posts.all %}
                 {% for post in user.posts.all %}
                     <div class="card" style="margin-bottom: 20px;">
                         <div class="card-body">
-                            <h5 class="card-title">@{{ post.user.username }}</h5>
+                            <h5 class="card-title">{{ post.user.username }}</h5>
                             <p class="card-text"><b>{{ post.created_at }}</b> - {{ post.body }}</p>
                         </div>
                     </div>
@@ -54,3 +70,8 @@
         </div>
     </div>
 {% endblock %}
+
+
+
+
+
