@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sn_profile',
-    'post'
+    'post',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -116,3 +117,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 LOGIN_URL = '/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}

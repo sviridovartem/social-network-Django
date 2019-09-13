@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from post.views import FeedView
-from sn_profile.views import frontpage, signout, profile, follows, followers, follow, stopfollow, friends
+from sn_profile.views import frontpage, signout, profile, follows, followers, follow, stopfollow, friends, search
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -14,4 +14,5 @@ urlpatterns = [
     path('<str:username>/friends/', friends, name='friends'),
     path('<str:username>/stopfollow/', stopfollow, name='stopfollow'),
     path('<str:username>/', profile, name='profile'),
+    path('<str:username>/search/', search, name="search")
 ]

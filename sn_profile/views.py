@@ -99,3 +99,10 @@ def friends(request, username):
     sn_profiles2 = request.user.sn_profile.followed_by.select_related('user').all()
     sn_profiles = list(set(sn_profiles1) & set(sn_profiles2))
     return render(request, 'users.html', {'title': 'Friends', 'sn_profiles': sn_profiles})
+
+
+def search(request, username):
+    users = User.objects.all()
+    userList =User.objects.values()
+
+    return render(request, 'users.html', {'title': 'Search', 'sn_profiles': userList})

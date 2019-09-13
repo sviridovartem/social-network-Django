@@ -3,15 +3,53 @@
 {% block main %}
     <div>
         <h1>{{ title }}</h1>
-        <ul>
-            {% for profile in sn_profiles %}
-                <li>
-                    <a href="/{{ profile.user.username }}/">{{ profile.user.username }}</a>
-                    <a href="/{{ user.username }}/stopfollow/" class="btn btn-danger" style="margin-left: 40px">Stop follow</a>
-                </li>
-                <hr>
-            {% endfor %}
-        </ul>
+        {% if title == "Follows" or title == "Followers" %}
+            <ul>
+                {% for profile in sn_profiles %}
+                    <li>
+                        <a href="/{{ profile.user.username }}/">{{ profile.user.username }}</a>
+                    </li>
+                    <hr>
+                {% endfor %}
+            </ul>
+        {% elif title == "Friends" %}
+            <ul>
+                {% for profile in sn_profiles %}
+                    <li>
+                        <a href="/{{ profile.user.username }}/">{{ profile.user.username }}</a>
+                        <a href="/{{ user.username }}/stopfollow/" class="btn btn-danger" style="margin-left: 40px">Stop
+                            follow</a>
+                    </li>
+                    <hr>
+                {% endfor %}
+            </ul>
+        {% elif title == "Search" %}
+            <ul>
+                {% for profile in sn_profiles %}
+                    {% if profile.username != user.username %}
+                        {% for el in user.sn_profile.followed_by.all %}
+                            <a href="/{{ profile.user.username }}/">{{ profile.username }}</a>
+                            {% if el.user.username == profile.profile.username %}
+                                <li>
+                                    <a href="/{{ request.user.username }}/stopfollow/" class="btn btn-danger">Stop
+                                        follow</a>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <a href="/{{ request.user.username }}/follow/"
+                                       class="btn btn-success">Follow</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    <hr>
+                {% endfor %}
+            </ul>
+            <ul>
+
+            </ul>
+
+        {% endif %}
     </div>
 {% endblock %}
 
